@@ -115,39 +115,34 @@
 #   ansible.builtin.debug:
 #     var: snort_src_list.stdout_lines
 
-- name: List Snort source directory contents
-  ansible.builtin.command: ls -lah /root/snort_src/snort3-3.1.78.0
-  register: snort_dir_contents
+# - name: Display Snort directory listing
+#   ansible.builtin.debug:
+#     var: snort_dir_contents.stdout_lines
 
-- name: Display Snort directory listing
-  ansible.builtin.debug:
-    var: snort_dir_contents.stdout_lines
+- name: Ensure CMake and other build dependencies are installed
+  ansible.builtin.apt:
+    name:
+      - cmake
+      - make
+      - g++
+    state: present
+    update_cache: yes
 
-- name: Ensure configure script is executable
-  ansible.builtin.file:
-    path: "/root/snort_src/snort3-3.1.78.0/configure"
-    mode: a+x
+- name: Configure Snort with CMake
+  ansible.builtin.shell:
+    cmd: "./configure_cmake.sh --prefix=/usr/local"
+    chdir: "/root/snort_src/snort3-3.1.78.0"
 
-- name: Install Snort from source
-  block:
-    - name: Configure Snort
-      ansible.builtin.command:
-        cmd: "./configure --enable-sourcefire"
-      args:
-        chdir: "/root/snort_src/snort3-3.1.78.0"
+- name: Build Snort using CMake
+  ansible.builtin.shell:
+    cmd: "make"
+    chdir: "/root/snort_src/snort3-3.1.78.0/build"
 
-    - name: Compile Snort
-      ansible.builtin.command:
-        cmd: make
-      args:
-        chdir: "/root/snort_src/snort3-3.1.78.0"
-
-    - name: Install Snort
-      ansible.builtin.command:
-        cmd: make install
-      become: yes
-      args:
-        chdir: "/root/snort_src/snort3-3.1.78.0"
+- name: Install Snort
+  ansible.builtin.shell:
+    cmd: "make install"
+    become: yes
+    chdir: "/root/snort_src/snort3-3.1.78.0/build"
 
 - name: Set environment variables for Snort
   ansible.builtin.lineinfile:
