@@ -68,16 +68,16 @@
       args:
         chdir: /root/snort_src/libdaq-3.0.14
       
-    #Trouble shooting tasks
-    - name: Display config.log contents
-      ansible.builtin.shell:
-        cmd: cat /root/snort_src/libdaq-3.0.14/config.log
-      register: config_log
+    # #Trouble shooting tasks
+    # - name: Display config.log contents
+    #   ansible.builtin.shell:
+    #     cmd: cat /root/snort_src/libdaq-3.0.14/config.log
+    #   register: config_log
 
-    - name: Output config.log contents
-      ansible.builtin.debug:
-        var: config_log.stdout_lines
-    #End of Trouble shooting tasls
+    # - name: Output config.log contents
+    #   ansible.builtin.debug:
+    #     var: config_log.stdout_lines""
+    # #End of Trouble shooting tasls
 
     - name: Compile DAQ
       ansible.builtin.command:
@@ -107,13 +107,13 @@
     dest: "/root/snort_src/"
     remote_src: yes
 
-- name: List Snort source directory
-  ansible.builtin.command: ls -lah /root/snort_src/
-  register: snort_src_list
+# - name: List Snort source directory
+#   ansible.builtin.command: ls -lah /root/snort_src/
+#   register: snort_src_list
 
-- name: Display Snort source directory contents
-  ansible.builtin.debug:
-    var: snort_src_list.stdout_lines
+# - name: Display Snort source directory contents
+#   ansible.builtin.debug:
+#     var: snort_src_list.stdout_lines
 
 - name: Install Snort from source
   block:
@@ -121,20 +121,20 @@
       ansible.builtin.command:
         cmd: "./configure --enable-sourcefire"
       args:
-        chdir: "/root/snort_src/snort-3.1.78.0"
+        chdir: "/root/snort_src/snort3-3.1.78.0"
 
     - name: Compile Snort
       ansible.builtin.command:
         cmd: make
       args:
-        chdir: "/root/snort_src/snort-3.1.78.0"
+        chdir: "/root/snort_src/snort3-3.1.78.0"
 
     - name: Install Snort
       ansible.builtin.command:
         cmd: make install
       become: yes
       args:
-        chdir: "/root/snort_src/snort-3.1.78.0"
+        chdir: "/root/snort_src/snort3-3.1.78.0"
 
 - name: Set environment variables for Snort
   ansible.builtin.lineinfile:
