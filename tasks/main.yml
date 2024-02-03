@@ -25,10 +25,11 @@
     state: directory
     mode: '0755'
 
-- name: Download DAQ (Data Acquisition library) source
-  get_url:
-    url: "https://www.snort.org/downloads/snortplus/libdaq-3.0.14.tar.gz"
-    dest: "~/snort_src/libdaq-3.0.14.tar.gz"
+- name: Download DAQ (Data Acquisition library) source with wget
+  ansible.builtin.shell: |
+    wget --no-check-certificate -O /root/snort_src/libdaq-3.0.14.tar.gz https://www.snort.org/downloads/snortplus/libdaq-3.0.14.tar.gz
+  args:
+    warn: false  # Optionally disable Ansible warnings about using 'shell' module.
 
 - name: Extract DAQ source
   unarchive:
