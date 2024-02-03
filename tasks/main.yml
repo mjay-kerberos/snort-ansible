@@ -26,10 +26,9 @@
     mode: '0755'
 
 - name: Download DAQ (Data Acquisition library) source with wget
-  ansible.builtin.shell: |
-    wget --no-check-certificate -O /root/snort_src/libdaq-3.0.14.tar.gz https://www.snort.org/downloads/snortplus/libdaq-3.0.14.tar.gz
-  args:
-    warn: false
+  ansible.builtin.shell:
+    cmd: wget --no-check-certificate -O /root/snort_src/libdaq-3.0.14.tar.gz https://www.snort.org/downloads/snortplus/libdaq-3.0.14.tar.gz
+
 
 - name: Extract DAQ source
   unarchive:
