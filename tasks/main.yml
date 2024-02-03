@@ -59,7 +59,6 @@
 
 - name: Ensure sudo is installed
   ansible.builtin.raw: apt-get update && apt-get install -y sudo
-  become: yes
 
 - name: Install DAQ from source
   block:
