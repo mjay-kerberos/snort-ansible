@@ -46,26 +46,26 @@
 - name: Run autoreconf for DAQ
   ansible.builtin.command:
     cmd: autoreconf -f -i
-    chdir: /root/snort_src/daq-3.0.14  # Use the absolute path for consistency
+    chdir: /root/snort_src/libdaq-3.0.14
 
 - name: Install DAQ from source
   block:
     - name: Configure DAQ
       ansible.builtin.command:
         cmd: "./configure"
-        chdir: /root/snort_src/daq-3.0.14  # Use the absolute path for consistency
+        chdir: /root/snort_src/libdaq-3.0.14
 
     - name: Compile DAQ
       ansible.builtin.command:
         cmd: make
-        chdir: /root/snort_src/daq-3.0.14  # Use the absolute path for consistency
+        chdir: /root/snort_src/libdaq-3.0.14
 
     - name: Install DAQ
       ansible.builtin.command:
         cmd: make install
       become: yes
       args:
-        chdir: /root/snort_src/daq-3.0.14  # Use the absolute path for consistency
+        chdir: /root/snort_src/libdaq-3.0.14
 
 - name: Ensure Snort source directory exists
   ansible.builtin.file:
