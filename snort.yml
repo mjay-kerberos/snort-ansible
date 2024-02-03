@@ -1,0 +1,37 @@
+---
+- name: Deploy and Configure Snort IDS
+  hosts: all
+  become: yes
+  vars:
+    home_net: "100.65.2.255/16"  
+    snort_rules_url: "https://www.snort.org/rules/community"  \
+    snort_rules_path: "/etc/snort/rules"  
+
+  tasks:
+    - name: Update apt cache and upgrade all packages
+      ansible.builtin.apt:
+        update_cache: yes
+        upgrade: dist
+
+    - name: Ensure required packages are installed
+      ansible.builtin.apt:
+        name:
+          - build-essential
+          - libpcap-dev
+          - libpcre3-dev
+          - libdumbnet-dev
+          - bison
+          - flex
+          - zlib1g-dev
+          - liblzma-dev
+          - libssl-dev
+          - cmake
+        state: present
+
+  roles:
+    - role: your_snort_role
+      vars:
+        home_net: "{{ home_net }}"
+        external_net: "!{{ home_net }}"
+        snort_rules_url: "{{ snort_rules_url }}"
+        snort_rules_path: "{{ snort_rules_path }}"
