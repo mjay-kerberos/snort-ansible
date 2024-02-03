@@ -1,0 +1,14 @@
+- name: Prepare
+  hosts: all
+  gather_facts: false
+  tasks:
+    - name: Update apt repository cache
+      ansible.builtin.apt:
+        update_cache: yes
+      changed_when: false
+
+    - name: Install Python for Ansible
+      ansible.builtin.apt:
+        name: python3
+        state: present
+      become: yes
