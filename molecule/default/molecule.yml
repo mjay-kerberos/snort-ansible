@@ -8,6 +8,7 @@ platforms:
   - name: instance-ubuntu
     image: "solita/ubuntu-systemd:latest"
     privileged: true
+    command: "/sbin/init"
   - name: instance-ubuntu
     image: "ubuntu:latest"
     pre_build_image: true
