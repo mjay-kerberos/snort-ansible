@@ -1,0 +1,28 @@
+---
+- name: Verify
+  hosts: all
+  tasks:
+    - name: Check Snort installation
+      command: "{{ snort_install_path }}/snort -V"
+      register: snort_version_output
+      changed_when: false
+
+    - name: Assert Snort version
+      assert:
+        that:
+          - "'Snort version {{ snort_version }}' in snort_version_output.stdout"
+        fail_msg: "Snort version mismatch"
+        success_msg: "Snort version verified"
+    
+    - name: Check if Snort community rules are extracted
+      stat:
+        path: "{{ snort_rules_path }}/community"
+      register: snort_community_rules
+
+    - name: Assert Snort community rules are present
+      assert:
+        that:
+          - snort_community_rules.stat.exists
+        fail_msg: "Snort community rules are not extracted"
+        success_msg: "Snort community rules are present and extracted"
+
