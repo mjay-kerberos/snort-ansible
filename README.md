@@ -38,7 +38,7 @@ None. The ansible script makes sure to install all necessary dependencies for yo
 ```yaml
 - hosts: all
   roles:
-    - { role: ansible-snort3, snort_version: "3.1.78.0" }
+    - { role: snort, snort_version: "3.1.78.0" }
 ```
 
 ## Usage
