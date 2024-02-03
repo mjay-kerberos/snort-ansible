@@ -144,8 +144,8 @@
 - name: Install Snort
   ansible.builtin.shell:
     cmd: "make install"
-    become: yes
     chdir: "/root/snort_src/snort3-3.1.78.0/build"
+  become: yes
 
 - name: Set environment variables for Snort
   ansible.builtin.lineinfile:
