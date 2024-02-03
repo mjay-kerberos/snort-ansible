@@ -53,6 +53,7 @@
     name:
       - g++
       - libcmocka-dev
+      - build-essential
     state: present
     update_cache: yes
 
