@@ -1,0 +1,122 @@
+---
+- name: Install prerequisite packages
+  apt:
+    name:
+      - gcc
+      - libpcre3-dev
+      - zlib1g-dev
+      - libluajit-5.1-dev
+      - libpcap-dev
+      - openssl
+      - libssl-dev
+      - libnghttp2-dev
+      - libdumbnet-dev
+      - bison
+      - flex
+      - libdnet
+      - autoconf
+      - libtool
+    state: present
+    update_cache: yes
+
+- name: Create download directory for Snort sources
+  file:
+    path: "~/snort_src"
+    state: directory
+    mode: '0755'
+
+- name: Download DAQ (Data Acquisition library) source
+  get_url:
+    url: "https://www.snort.org/downloads/snort/libdaq-3.0.14.tar.gz"
+    dest: "~/snort_src/libdaq-3.0.14.tar.gz"
+
+- name: Extract DAQ source
+  unarchive:
+    src: "~/snort_src/libdaq-3.0.14.tar.gz"
+    dest: "~/snort_src/"
+    remote_src: yes
+
+- name: Install DAQ from source
+  block:
+    - name: Run autoreconf for DAQ
+      command: autoreconf -f -i
+      args:
+        chdir: "~/snort_src/daq-3.0.14"
+        
+    - name: Configure DAQ
+      command: "./configure"
+      args:
+        chdir: "~/snort_src/daq-3.0.14"
+        
+    - name: Compile DAQ
+      command: make
+      args:
+        chdir: "~/snort_src/daq-3.0.14"
+        
+    - name: Install DAQ
+      ansible.builtin.command: make install
+      become: yes
+      args:
+        chdir: "~/snort_src/daq-3.0.14"
+
+- name: Download Snort source
+  get_url:
+    url: "https://www.snort.org/downloads/snort/snort-3.1.78.0.tar.gz" # Updated to the latest version as noted
+    dest: "~/snort_src/snort-3.1.78.0.tar.gz"
+
+- name: Extract Snort source
+  unarchive:
+    src: "~/snort_src/snort-3.1.78.0.tar.gz"
+    dest: "~/snort_src/"
+    remote_src: yes
+
+- name: Install Snort from source
+  block:
+    - name: Configure Snort
+      command: "./configure --enable-sourcefire"
+      args:
+        chdir: "~/snort_src/snort-3.1.78.0"
+        
+    - name: Compile Snort
+      command: make
+      args:
+        chdir: "~/snort_src/snort-3.1.78.0"
+        
+    - name: Install Snort
+      command: make install
+      become: yes
+      args:
+        chdir: "~/snort_src/snort-3.1.78.0"
+
+- name: Set environment variables for Snort
+  lineinfile:
+    path: /etc/environment
+    line: "{{ item }}"
+    state: present
+  loop:
+    - "PATH=\"$PATH:/usr/local/bin\""
+    - "SNORT_HOME=\"/usr/local/bin\""
+
+- name: Download Snort 3 community rules
+  get_url:
+    url: "{{ snort_rules_url }}"
+    dest: "{{ snort_rules_path }}/snort3-community-rules.tar.gz"
+  notify: Extract Snort 3 community rules
+
+- name: Ensure Snort rules directory exists
+  file:
+    path: "{{ snort_rules_path }}/community"
+    state: directory
+
+- name: Copy Snort configuration files
+  template:
+    src: "templates/snort.conf.j2"
+    dest: "/etc/snort/snort.conf"
+  notify: Restart Snort
+
+- name: Ensure Snort service is running
+  systemd:
+    name: snort
+    state: started
+    enabled: yes
+    daemon_reload: yes
