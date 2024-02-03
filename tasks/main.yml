@@ -107,6 +107,14 @@
     dest: "/root/snort_src/"
     remote_src: yes
 
+- name: List Snort source directory
+  ansible.builtin.command: ls -lah /root/snort_src/
+  register: snort_src_list
+
+- name: Display Snort source directory contents
+  ansible.builtin.debug:
+    var: snort_src_list.stdout_lines
+
 - name: Install Snort from source
   block:
     - name: Configure Snort
