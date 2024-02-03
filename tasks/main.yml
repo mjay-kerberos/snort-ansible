@@ -29,6 +29,7 @@
   get_url:
     url: "https://www.snort.org/downloads/snort/libdaq-3.0.14.tar.gz"
     dest: "~/snort_src/libdaq-3.0.14.tar.gz"
+    validate_certs: false  # Disable SSL certificate verification
 
 - name: Extract DAQ source
   unarchive:
@@ -63,6 +64,7 @@
   get_url:
     url: "https://www.snort.org/downloads/snort/snort-3.1.78.0.tar.gz" # Updated to the latest version as noted
     dest: "~/snort_src/snort-3.1.78.0.tar.gz"
+    validate_certs: false
 
 - name: Extract Snort source
   unarchive:
