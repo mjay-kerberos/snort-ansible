@@ -48,12 +48,33 @@
     cmd: autoreconf -f -i
     chdir: /root/snort_src/libdaq-3.0.14
 
+- name: Install additional required packages for DAQ
+  ansible.builtin.apt:
+    name:
+      - g++
+      - libcmocka-dev
+    state: present
+    update_cache: yes
+
+
 - name: Install DAQ from source
   block:
-    - name: Configure DAQ
+    - name: Configure DAQ with disabled dependency tracking
       ansible.builtin.command:
-        cmd: "./configure"
+        cmd: "./configure --disable-dependency-tracking --enable-sourcefire"
+      args:
         chdir: /root/snort_src/libdaq-3.0.14
+      
+    #Trouble shooting tasks
+    - name: Display config.log contents
+      ansible.builtin.shell:
+        cmd: cat /root/snort_src/libdaq-3.0.14/config.log
+      register: config_log
+
+    - name: Output config.log contents
+      ansible.builtin.debug:
+        var: config_log.stdout_lines
+    #End of Trouble shooting tasls
 
     - name: Compile DAQ
       ansible.builtin.command:
