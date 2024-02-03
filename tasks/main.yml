@@ -127,6 +127,7 @@
       - cmake
       - make
       - g++
+      - liblzma-dev
     state: present
     update_cache: yes
 
