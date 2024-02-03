@@ -115,6 +115,19 @@
 #   ansible.builtin.debug:
 #     var: snort_src_list.stdout_lines
 
+- name: List Snort source directory contents
+  ansible.builtin.command: ls -lah /root/snort_src/snort3-3.1.78.0
+  register: snort_dir_contents
+
+- name: Display Snort directory listing
+  ansible.builtin.debug:
+    var: snort_dir_contents.stdout_lines
+
+- name: Ensure configure script is executable
+  ansible.builtin.file:
+    path: "/root/snort_src/snort3-3.1.78.0/configure"
+    mode: a+x
+
 - name: Install Snort from source
   block:
     - name: Configure Snort
