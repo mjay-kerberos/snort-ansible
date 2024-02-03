@@ -1,9 +1,9 @@
 # Basic Snort Configuration Template (snort.conf.j2)
 # Note: This is a simplified version. Needs customization.
 
-# Set the network variables
-var HOME_NET {{ home_net | default("any") }}
-var EXTERNAL_NET !$HOME_NET
+# Set the network variables for localhost
+var HOME_NET {{ home_net | default("127.0.0.1") }}
+var EXTERNAL_NET any
 
 # Path to your rule files
 var RULE_PATH /etc/snort/rules
