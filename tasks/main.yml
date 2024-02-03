@@ -122,6 +122,8 @@
 - name: Ensure CMake and other build dependencies are installed
   ansible.builtin.apt:
     name:
+      - hwloc
+      - libhwloc-dev
       - cmake
       - make
       - g++
