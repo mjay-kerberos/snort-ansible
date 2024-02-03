@@ -4,6 +4,10 @@ dependency:
 driver:
   name: docker
 platforms:
+  platforms:
+  - name: instance-ubuntu
+    image: "solita/ubuntu-systemd:latest"
+    privileged: true
   - name: instance-ubuntu
     image: "ubuntu:latest"
     pre_build_image: true

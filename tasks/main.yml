@@ -177,9 +177,17 @@
     src: "snort.conf.j2"
     dest: "/etc/snort/snort.conf"
 
-- name: Ensure Snort service is running
-  ansible.builtin.systemd:
+- name: Special configuration for Ubuntu with systemd
+  ansible.builtin.copy:
+    src: special_ubuntu_config_with_systemd.conf
+    dest: /etc/snort/snort.conf
+  when: ansible_facts['distribution'] == 'Ubuntu' and 'systemd' in ansible_facts.services
+
+- name: Ensure Snort service is running (systemd)
+  systemd:
     name: snort
     state: started
     enabled: yes
-    daemon_reload: yes
+  when: "'systemd' in ansible_facts.services"
+
+
