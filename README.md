@@ -32,7 +32,12 @@ snort_rules_path: "/etc/snort/rules"
 ```
 
 ## Dependencies
-None. The ansible script makes sure to install all necessary dependencies for you. :)
+None. The ansible script makes sure to install all necessary dependencies for you. 
+However, for testing purposes if you want to use the molecule folder. Make sure to have the reqs needed. 
+### Requirements
+- Ansible
+- Docker
+- Molecule (with Docker driver)
 
 ## Example Playbook
 ```yaml
@@ -58,6 +63,33 @@ None. The ansible script makes sure to install all necessary dependencies for yo
     ```bash
     snort -V
     ```
+
+## Testing with Molecule
+
+This role includes Molecule tests for verifying functionality. To run these tests:
+
+1. Ensure you have Molecule and the Docker driver installed:
+
+    ```bash
+    python3 -m pip install --user molecule molecule-docker
+    ```
+
+2. Change to the role directory:
+
+    ```bash
+    cd snort
+    ```
+
+3. Run Molecule tests:
+
+    ```bash
+    molecule test
+    ```
+
+Molecule will perform a series of actions, such as linting the role, creating a Docker container, applying the role to the container, and then running any defined tests. After the tests are complete, Molecule will destroy the created container.
+
+For more information on Molecule, visit the [Molecule documentation](https://ansible.readthedocs.io/projects/molecule/getting-started/).
+
 
 ## License
 [MIT](LICENSE)
