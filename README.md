@@ -39,26 +39,42 @@ However, for testing purposes if you want to use the molecule folder. Make sure 
 - Docker
 - Molecule (with Docker driver)
 
-## Example Playbook
-```yaml
-- hosts: all
-  roles:
-    - { role: snort, snort_version: "3.1.78.0" }
+
+
+## Installation & Configuration
+
+1. Clone this repository to your control node:
+   ```bash
+   git clone <repository_url>
+   cd <cloned_directory>
+   ```
+
+2. Update the `inventory.ini` file to include the IP addresses or hostnames of your target systems under the appropriate host group.
+
+3. (Optional) Modify the `defaults/main.yml` file to customize Snort configuration parameters according to your requirements.
+
+Remember to replace `<repository_url>` and `<cloned_directory>` with the actual URL of the git repo and the name of the directory to which the repository is cloned, respectively.
+
+## Running the Playbook
+
+To deploy Snort on your target systems, run the Ansible playbook `snort.yml`. Since this playbook uses `become: yes` for tasks that require elevated privileges, you might need to provide a `sudo` password.
+
+Execute the playbook with the following command:
+
+```bash
+ansible-playbook -i inventory.ini snort.yml --ask-become-pass
 ```
 
-## Usage
+When prompted, enter the `sudo` password for the user under which the playbook is executed.
 
-1. Install this role from Ansible Galaxy or clone into your roles directory.
-
-2. Customize the variables in your playbook according to your requirements.
-
-3. Run the playbook against your target hosts.
+If your system does not require you to use sudo you can continue with 
 
     ```bash
     ansible-playbook -i inventory.ini snort.yml
     ```
+## Snort Verification
 
-4. Verify the Snort installation by running:
+To verify the Snort installation by running:
 
     ```bash
     snort -V
