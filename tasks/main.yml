@@ -29,67 +29,83 @@
   ansible.builtin.shell:
     cmd: wget --no-check-certificate -O /root/snort_src/libdaq-3.0.14.tar.gz https://www.snort.org/downloads/snortplus/libdaq-3.0.14.tar.gz
 
-
 - name: Extract DAQ source
-  unarchive:
-    src: "~/snort_src/libdaq-3.0.14.tar.gz"
-    dest: "~/snort_src/"
+  ansible.builtin.unarchive:
+    src: "/root/snort_src/libdaq-3.0.14.tar.gz"
+    dest: "/root/snort_src/"
     remote_src: yes
+
+- name: List DAQ source directory
+  ansible.builtin.command: ls -lah /root/snort_src/
+  register: ls_result
+
+- name: Display DAQ source directory contents
+  ansible.builtin.debug:
+    var: ls_result.stdout_lines
+
+- name: Run autoreconf for DAQ
+  ansible.builtin.command:
+    cmd: autoreconf -f -i
+    chdir: /root/snort_src/daq-3.0.14  # Use the absolute path for consistency
 
 - name: Install DAQ from source
   block:
-    - name: Run autoreconf for DAQ
-      command: autoreconf -f -i
-      args:
-        chdir: "~/snort_src/daq-3.0.14"
-        
     - name: Configure DAQ
-      command: "./configure"
-      args:
-        chdir: "~/snort_src/daq-3.0.14"
-        
+      ansible.builtin.command:
+        cmd: "./configure"
+        chdir: /root/snort_src/daq-3.0.14  # Use the absolute path for consistency
+
     - name: Compile DAQ
-      command: make
-      args:
-        chdir: "~/snort_src/daq-3.0.14"
-        
+      ansible.builtin.command:
+        cmd: make
+        chdir: /root/snort_src/daq-3.0.14  # Use the absolute path for consistency
+
     - name: Install DAQ
-      ansible.builtin.command: make install
+      ansible.builtin.command:
+        cmd: make install
       become: yes
       args:
-        chdir: "~/snort_src/daq-3.0.14"
+        chdir: /root/snort_src/daq-3.0.14  # Use the absolute path for consistency
+
+- name: Ensure Snort source directory exists
+  ansible.builtin.file:
+    path: /root/snort_src
+    state: directory
 
 - name: Download Snort source
-  get_url:
+  ansible.builtin.get_url:
     url: "https://www.snort.org/downloads/snortplus/snort3-3.1.78.0.tar.gz" # Updated to the latest version
-    dest: "~/snort_src/snort-3.1.78.0.tar.gz"
+    dest: "/root/snort_src/snort-3.1.78.0.tar.gz"
 
 - name: Extract Snort source
-  unarchive:
-    src: "~/snort_src/snort-3.1.78.0.tar.gz"
-    dest: "~/snort_src/"
+  ansible.builtin.unarchive:
+    src: "/root/snort_src/snort-3.1.78.0.tar.gz"
+    dest: "/root/snort_src/"
     remote_src: yes
 
 - name: Install Snort from source
   block:
     - name: Configure Snort
-      command: "./configure --enable-sourcefire"
+      ansible.builtin.command:
+        cmd: "./configure --enable-sourcefire"
       args:
-        chdir: "~/snort_src/snort-3.1.78.0"
-        
+        chdir: "/root/snort_src/snort-3.1.78.0"
+
     - name: Compile Snort
-      command: make
+      ansible.builtin.command:
+        cmd: make
       args:
-        chdir: "~/snort_src/snort-3.1.78.0"
-        
+        chdir: "/root/snort_src/snort-3.1.78.0"
+
     - name: Install Snort
-      command: make install
+      ansible.builtin.command:
+        cmd: make install
       become: yes
       args:
-        chdir: "~/snort_src/snort-3.1.78.0"
+        chdir: "/root/snort_src/snort-3.1.78.0"
 
 - name: Set environment variables for Snort
-  lineinfile:
+  ansible.builtin.lineinfile:
     path: /etc/environment
     line: "{{ item }}"
     state: present
@@ -97,25 +113,29 @@
     - "PATH=\"$PATH:/usr/local/bin\""
     - "SNORT_HOME=\"/usr/local/bin\""
 
-- name: Download Snort 3 community rules
-  get_url:
-    url: "{{ snort_rules_url }}"
-    dest: "{{ snort_rules_path }}/snort3-community-rules.tar.gz"
-  notify: Extract Snort 3 community rules
-
 - name: Ensure Snort rules directory exists
-  file:
+  ansible.builtin.file:
     path: "{{ snort_rules_path }}/community"
     state: directory
 
+- name: Download Snort 3 community rules
+  ansible.builtin.get_url:
+    url: "{{ snort_rules_url }}"
+    dest: "{{ snort_rules_path }}/snort3-community-rules.tar.gz"
+
+- name: Extract Snort 3 community rules
+  ansible.builtin.unarchive:
+    src: "{{ snort_rules_path }}/snort3-community-rules.tar.gz"
+    dest: "{{ snort_rules_path }}/community"
+    remote_src: yes
+
 - name: Copy Snort configuration files
-  template:
-    src: "templates/snort.conf.j2"
+  ansible.builtin.template:
+    src: "snort.conf.j2"
     dest: "/etc/snort/snort.conf"
-  notify: Restart Snort
 
 - name: Ensure Snort service is running
-  systemd:
+  ansible.builtin.systemd:
     name: snort
     state: started
     enabled: yes
