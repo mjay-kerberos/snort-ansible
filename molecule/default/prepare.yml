@@ -10,3 +10,8 @@
     - name: Create symlink for Python3
       raw: ln -s /usr/bin/python3 /usr/bin/python
       when: ansible_facts['ansible_python']['executable'] is not defined
+    
+    - name: Ensure wget is installed
+      ansible.builtin.raw: apt-get update && apt-get install -y wget
+      changed_when: false
+

@@ -29,7 +29,7 @@
   ansible.builtin.shell: |
     wget --no-check-certificate -O /root/snort_src/libdaq-3.0.14.tar.gz https://www.snort.org/downloads/snortplus/libdaq-3.0.14.tar.gz
   args:
-    warn: false  # Optionally disable Ansible warnings about using 'shell' module.
+    warn: false
 
 - name: Extract DAQ source
   unarchive:
