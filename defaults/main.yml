@@ -1,0 +1,6 @@
+---
+snort_version: "3.1.78.0"
+daq_version: "3.0.14"
+snort_install_path: "/usr/local/bin"
+snort_rules_url: "https://www.snort.org/downloads/community/snort3-community-rules.tar.gz"  # Updated URL
+snort_rules_path: "/etc/snort/rules"
