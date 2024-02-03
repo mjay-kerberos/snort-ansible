@@ -4,14 +4,14 @@ dependency:
 driver:
   name: docker
 platforms:
-  platforms:
-  - name: instance-ubuntu
+  - name: instance-ubuntu-systemd
     image: "solita/ubuntu-systemd:latest"
-    privileged: true
-    command: "/sbin/init"
+    privileged: True
+    pre_build_image: True
+
   - name: instance-ubuntu
     image: "ubuntu:latest"
-    pre_build_image: true
+    pre_build_image: True
 provisioner:
   name: ansible
   config_options:
