@@ -3,10 +3,6 @@
   hosts: localhost
   gather_facts: yes
   become: yes
-  vars:
-    home_net: "127.0.0.1"
-    snort_rules_url: "https://www.snort.org/rules/community"
-    snort_rules_path: "/etc/snort/rules"
 
   tasks:
     - name: Update apt cache and upgrade all packages
@@ -31,8 +27,3 @@
 
   roles:
     - role: snort
-      vars:
-        home_net: "{{ home_net }}"
-        external_net: "!{{ home_net }}"
-        snort_rules_url: "{{ snort_rules_url }}"
-        snort_rules_path: "{{ snort_rules_path }}"
