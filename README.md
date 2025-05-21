@@ -69,16 +69,16 @@ When prompted, enter the `sudo` password for the user under which the playbook i
 
 If your system does not require you to use sudo you can continue with 
 
-    ```bash
+   ```bash
     ansible-playbook -i inventory.ini snort.yml
-    ```
+   ```
 ## Snort Verification
 
 To verify the Snort installation by running:
 
-    ```bash
+   ```bash
     snort -V
-    ```
+   ```
 
 ## Testing with Molecule
 
