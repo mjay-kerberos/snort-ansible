@@ -1,5 +1,24 @@
+<div id="top">
+
+<!-- HEADER STYLE: CLASSIC -->
+<div align="center">
+
 # Ansible Role: Snort 3
-A simple snort ansible role. This role installs and configures Snort 3, the latest version of the open-source network intrusion detection system (NIDS) software. It ensures that Snort 3 and its dependencies are installed and configured on your systems.
+
+<em>A simple snort ansible role. This role installs and configures Snort 3, the latest version of the open-source network intrusion detection system (NIDS) software. It ensures that Snort 3 and its dependencies are installed and configured on your systems.</em>
+
+<!-- BADGES -->
+<img src="https://img.shields.io/github/last-commit/mjay-kerberos/snort-ansible?style=flat&logo=git&logoColor=white&color=0080ff" alt="last-commit">
+<br>
+
+<em>Built with the tools and technologies:</em>
+<br>
+<img src="https://img.shields.io/badge/Ansible-EE0000.svg?style=flat&logo=Ansible&logoColor=white" alt="Ansible">
+
+
+</div>
+<br>
+
 
 ## Requirements
 - Target systems must be running a Debian-based Linux distribution (e.g., Ubuntu).
